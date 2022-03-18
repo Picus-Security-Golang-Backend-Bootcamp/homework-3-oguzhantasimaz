@@ -2,10 +2,11 @@ package helper
 
 import (
 	"crypto/rand"
-	"log"
 	"math/big"
 	"strconv"
 	"strings"
+
+	log "github.com/sirupsen/logrus"
 )
 
 //random string generator with cryptorand
