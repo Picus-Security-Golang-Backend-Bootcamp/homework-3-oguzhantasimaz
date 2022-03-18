@@ -1,8 +1,7 @@
 package main
 
 import (
-	"os"
-
+	"github.com/onsi/ginkgo/reporters/stenographer/support/go-colorable"
 	log "github.com/sirupsen/logrus"
 
 	infrastructure "github.com/Picus-Security-Golang-Backend-Bootcamp/homework-3-oguzhantasimaz/internal/infrastructure/repositories"
@@ -14,14 +13,15 @@ import (
 
 func init() {
 	// Log as JSON instead of the default ASCII formatter.
-	log.SetFormatter(&log.JSONFormatter{})
+	log.SetFormatter(&log.TextFormatter{ForceColors: true})
 
 	// Output to stdout instead of the default stderr
 	// Can be any io.Writer, see below for File example
-	log.SetOutput(os.Stdout)
+	log.SetOutput(colorable.NewColorableStdout())
 
 	// Only log the warning severity or above.
-	log.SetLevel(log.WarnLevel)
+	log.SetLevel(log.TraceLevel)
+
 }
 
 func start() (books.BookRepository, authors.AuthorRepository) {
@@ -31,10 +31,9 @@ func start() (books.BookRepository, authors.AuthorRepository) {
 	}
 	bookRepo := book.NewBookRepository(db)
 	authorRepo := author.NewAuthorRepository(db)
-	bookRepo.Migration()
 	authorRepo.Migration()
+	bookRepo.Migration()
 	bookRepo.InsertSampleData()
-	authorRepo.InsertSampleData()
 
 	return bookRepo, authorRepo
 }
@@ -48,7 +47,7 @@ func main() {
 	}
 
 	for _, author := range authorList {
-		log.Info(author)
+		author.Print()
 	}
 
 	bookList, err := books.GetAllBooks(bookRepo)
@@ -57,7 +56,7 @@ func main() {
 	}
 
 	for _, book := range bookList {
-		log.Info(book)
+		book.Print()
 	}
 
 }
