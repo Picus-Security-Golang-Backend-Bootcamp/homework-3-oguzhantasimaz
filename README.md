@@ -10,7 +10,9 @@ Change directory into project folder
 Change MYSQLDB connection information which is in main.go, line 34
 
 ### Start start.sh script
-Write `./start.sh` code snippet to the terminal/command-line.
+Write `./start.sh` code snippet to the terminal / command-line.
+If you get "Permission denied" error just type this to terminal / command-line
+`chmod u+r+x start.sh`
 
 #### If sh script doesn`t work
 Change directory to
