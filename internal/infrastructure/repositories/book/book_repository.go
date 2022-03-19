@@ -1,6 +1,8 @@
 package book
 
 import (
+	"errors"
+
 	"github.com/Picus-Security-Golang-Backend-Bootcamp/homework-3-oguzhantasimaz/internal/models/authors"
 	"github.com/Picus-Security-Golang-Backend-Bootcamp/homework-3-oguzhantasimaz/internal/models/books"
 	"gorm.io/gorm"
@@ -55,6 +57,10 @@ func (b *bookRepository) CreateBook(book *books.Book) (*books.Book, error) {
 
 // UpdateBook updates a book
 func (b *bookRepository) UpdateBook(book *books.Book) (*books.Book, error) {
+	//control if book deleted
+	if book.IsDeleted == true {
+		return nil, errors.New("You cannot update deleted book")
+	}
 	err := b.db.Save(book).Error
 	return book, err
 }
@@ -66,6 +72,11 @@ func (b *bookRepository) DeleteBook(id int) error {
 	if err != nil {
 		return err
 	}
+	//control if book deleted
+	if book.IsDeleted == true {
+		return errors.New("book already deleted")
+	}
+
 	book.IsDeleted = true
 	book, err = b.UpdateBook(book)
 	if err != nil {
@@ -79,6 +90,10 @@ func (b *bookRepository) BuyBook(id int, count int) (*books.Book, error) {
 	book, err := b.GetBookByID(id)
 	if err != nil {
 		return nil, err
+	}
+
+	if book.IsDeleted == true {
+		return nil, errors.New("You cannot buy deleted book")
 	}
 	if book.StockCount < count {
 		log.Fatal("Not enough stock")
