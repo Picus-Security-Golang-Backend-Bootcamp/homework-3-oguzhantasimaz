@@ -22,7 +22,7 @@ type Book struct {
 }
 
 func (b *Book) Print() {
-	log.Infof("%s | %s | %s | %f", b.Title, b.Author.Name, b.StockCode, b.Price)
+	log.Infof("\nBook:\n %d | %s | %s | %d | %d | %d | %f | %v ", b.ID, b.Title, b.StockCode, b.StockCount, b.Isbn, b.PageCount, b.Price, b.IsDeleted)
 }
 
 func CreateBook(r BookRepository, book *Book) (*Book, error) {
@@ -35,6 +35,14 @@ func GetAllBooks(r BookRepository) ([]*Book, error) {
 
 func GetBookByID(r BookRepository, id int) (*Book, error) {
 	return r.GetBookByID(id)
+}
+
+func GetBookByTitle(r BookRepository, title string) (*Book, error) {
+	return r.GetBookByTitle(title)
+}
+
+func BuyBook(r BookRepository, id int, count int) (*Book, error) {
+	return r.BuyBook(id, count)
 }
 
 func UpdateBook(r BookRepository, book *Book) (*Book, error) {

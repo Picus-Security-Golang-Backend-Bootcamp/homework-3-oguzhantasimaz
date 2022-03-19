@@ -13,7 +13,7 @@ type Author struct {
 }
 
 func (b *Author) Print() {
-	log.Infof("%s | %s", b.Name, b.Surname)
+	log.Infof("\nAuthor:\n %s | %s", b.Name, b.Surname)
 }
 
 func NewAuthor(r AuthorRepository, author *Author) (*Author, error) {

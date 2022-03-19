@@ -33,6 +33,12 @@ func (b *bookRepository) GetBookByID(id int) (*books.Book, error) {
 	err := b.db.Where("id = ?", id).First(book).Error
 	return book, err
 }
+func (b *bookRepository) GetBookByTitle(title string) (*books.Book, error) {
+	book := new(books.Book)
+	//parameter title includes wildcard character '%'
+	err := b.db.Where("title LIKE ?", "%"+title+"%").First(book).Error
+	return book, err
+}
 func (b *bookRepository) CreateBook(book *books.Book) (*books.Book, error) {
 	err := b.db.Create(book).Error
 	return book, err
@@ -42,8 +48,32 @@ func (b *bookRepository) UpdateBook(book *books.Book) (*books.Book, error) {
 	return book, err
 }
 func (b *bookRepository) DeleteBook(id int) error {
-	err := b.db.Where("id = ?", id).Save(&books.Book{IsDeleted: true}).Error
+	//update book isDeleted field to true
+	book, err := b.GetBookByID(id)
+	if err != nil {
+		return err
+	}
+	book.IsDeleted = true
+	book, err = b.UpdateBook(book)
+	if err != nil {
+		return err
+	}
 	return err
+}
+func (b *bookRepository) BuyBook(id int, count int) (*books.Book, error) {
+	book, err := b.GetBookByID(id)
+	if err != nil {
+		return nil, err
+	}
+	if book.StockCount < count {
+		log.Fatal("Not enough stock")
+	}
+	book.StockCount -= count
+	book, err = b.UpdateBook(book)
+	if err != nil {
+		return nil, err
+	}
+	return book, err
 }
 
 func (r *bookRepository) InsertSampleData() {
