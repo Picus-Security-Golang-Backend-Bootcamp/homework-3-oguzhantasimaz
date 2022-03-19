@@ -46,16 +46,6 @@ func start() (books.BookRepository, authors.AuthorRepository) {
 
 func main() {
 	bookRepo, authorRepo := start()
-
-	// authorList, err := authors.GetAllAuthors(authorRepo)
-	// if err != nil {
-	// 	log.Errorln(err)
-	// }
-
-	// for _, author := range authorList {
-	// 	author.Print()
-	// }
-
 	args := os.Args
 
 	if len(args) == 1 {
@@ -99,6 +89,11 @@ func main() {
 			}
 			for _, book := range bookList {
 				book.Print()
+				author, err := authors.GetAuthorByID(authorRepo, book.AuthorID)
+				if err != nil {
+					log.Fatal(err)
+				}
+				author.Print()
 			}
 		} else if args[0] == "buy" {
 			if len(args) >= 2 {

@@ -5,6 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// Author represents an author
 type Author struct {
 	gorm.Model
 	ID      int

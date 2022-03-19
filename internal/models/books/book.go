@@ -7,6 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// Book represents a book
 type Book struct {
 	gorm.Model
 	ID         int
